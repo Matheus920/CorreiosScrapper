@@ -1,0 +1,26 @@
+{
+  "name": "correiosscrapper",
+  "version": "1.0.0",
+  "description": "A Node.js Puppeteer web scrapper for brazilian delivery packages information",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matheus920/CorreiosScrapper.git"
+  },
+  "author": "Matheus Moreira da Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matheus920/CorreiosScrapper/issues"
+  },
+  "homepage": "https://github.com/Matheus920/CorreiosScrapper#readme",
+  "bin": {
+    "correios-scrapper": "./cli.js"
+  },
+  "dependencies": {
+    "puppeteer": "^5.0.0",
+    "yargs": "^15.4.0"
+  }
+}
