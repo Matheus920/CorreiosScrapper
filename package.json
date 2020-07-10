@@ -20,6 +20,7 @@
     "correios-scrapper": "./cli.js"
   },
   "dependencies": {
+    "inquirer": "^7.3.0",
     "puppeteer": "^5.0.0",
     "yargs": "^15.4.0"
   }
