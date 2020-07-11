@@ -67,14 +67,21 @@ command.save = function (argv) {
     } else {
         readline.question('Enter a name for this code (max 23 characters)', answer => {
             if (answer && answer.length <= 23) {
+                answer = answer.trim()
+
                 try {
                     if (fs.existsSync('favorites.json')) {
                         try {
                             items = JSON.parse(fs.readFileSync('favorites.json'));
 
-                            if (items.filter(favorite => favorite.value == argv.object_code)) {
+                            if ((items.filter(favorite => favorite.value == argv.object_code)).length > 0) {
                                 console.log('Code already registered.');
-                                process.exit(0);
+                                process.exit(1);
+                            }
+
+                            if ((items.filter(favorite => favorite.name == answer)).length > 0) {
+                                console.log('Name already registered for another code.');
+                                process.exit(1);
                             }
                         } catch (e) {
                             console.log('Error when reading the file.');
@@ -131,12 +138,12 @@ command.clear = function (argv) {
 command.findFavorite = function (argv) {
     try {
         console.log('Reading favorites file...');
-        items = JSON.parse(fs.readFileSync('favorites.json'))
+        items = JSON.parse(fs.readFileSync('favorites.json'));
         inquirer.prompt([
             {
                 type: 'list',
                 name: 'favorites',
-                message: 'Which object you want to track?',
+                message: 'Which object do you want to track?',
                 choices: items
             }
         ]).then(answers => {
@@ -144,7 +151,53 @@ command.findFavorite = function (argv) {
         });
 
     } catch (e) {
-        console.log('Something went wrong when reading favorite files');
+        console.log('Something went wrong when reading favorites file.');
+        process.exit(1);
+    }
+}
+
+command.clearFavorite = function (argv) {
+    console.log('Reading favorites file...');
+    try {
+        let items = JSON.parse(fs.readFileSync('favorites.json'));
+        inquirer.prompt([
+            {
+                type: "checkbox",
+                name: "favorites",
+                message: 'Which objects do you want to clear?',
+                choices: items
+            }
+        ]).then(answers => {   
+            if(answers.favorites.length > 0){
+                (answers.favorites).forEach(element => {
+                    items = items.filter(item => item.value != element);
+                });
+
+                console.log('Deleting choices...')
+
+                isEmpty = items.length == 0;
+
+                items = JSON.stringify(items);
+
+                try {
+                    if(!isEmpty){
+                        fs.writeFileSync('favorites.json', items);
+                    } else {
+                        fs.unlinkSync('favorites.json')
+                    }
+                    console.log('Sucessfully deleted!');
+                    process.exit(0);
+                } catch (e) {
+                    console.log('Something went when deleting favorites.');
+                    process.exit(1);
+                }
+            } else {
+                console.log('At least one must be selected.');
+                process.exit(1);
+            }
+        })
+    } catch (e) {
+        console.log('Something went wrong when reading favorites file.');
         process.exit(1);
     }
 }

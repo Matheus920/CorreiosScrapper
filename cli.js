@@ -30,6 +30,9 @@ require('yargs')
     .command('ff', 'Find tracking information for a favorite code', function(argv) {
         command.findFavorite(argv)
     })
+    .command('csf', 'Clear only selected favorites', function(argv) {
+        command.clearFavorite(argv)
+    })
     .demandCommand()
     .help()
     .argv
